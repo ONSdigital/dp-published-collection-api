@@ -23,5 +23,15 @@ package: build
 hash:
 	@git rev-parse --short HEAD
 	
+nomad:
+	@for t in *-template.nomad; do			\
+	plan=$${t%-template.nomad}.nomad;	\
+	test -f $$plan && rm $$plan;		\
+	sed	-e 's,DATA_CENTER,$(DATA_CENTER),g'	        	\
+		-e 's,S3_TAR_FILE,$(S3_TAR_FILE),g'		        	\
+		-e 's,PUBLISH_DATABASE_URL,$(DATABASE_URL),g'		\
+		< $$t > $$plan || exit 2;			\
+done
+	
 	
 .PHONY: build clean

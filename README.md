@@ -11,6 +11,7 @@ Returns an array of objects containing the most recent collection which have bee
 published.
 
 ##### JSON structure
+```
 [{
 	"id": Collection id,
 	"name": Name of the collection,
@@ -18,12 +19,13 @@ published.
 	"publishStartDate": Published start date in ISO 8601 format,
 	"publishEndDate": Published end date in ISO 8601 format,
 }, ...]
-
+```
 #### /publishedcollection/<collection id>
 Returns an objects containing more detailed information about the published 
 collection.
 
 ##### JSON structure
+```
 {
 	"id": Collection id,
 	"name": Name of the collection,
@@ -38,7 +40,7 @@ collection.
 			"size": The file size in bytes
 		}, ...]
 }
-
+```
 ### Configuration
 
 | Environment variable | Default | Description
