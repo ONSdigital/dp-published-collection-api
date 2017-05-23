@@ -106,7 +106,8 @@ func (api *API) getResults(scheduleID int64, startTime int64) ([]PublishedItem, 
 		var uri sql.NullString
 		var fileCompleteTime sql.NullInt64
 		fileRows.Scan(&uri, &fileCompleteTime)
-		results = append(results, PublishedItem{StartTime: convertTime(startTime), EndTime: convertTime(fileCompleteTime.Int64),
+		duration := (fileCompleteTime.Int64 - startTime) / 1000 / 1000
+		results = append(results, PublishedItem{Duration: duration,
 			Uri: uri.String, Size: 0})
 	}
 	return results, nil

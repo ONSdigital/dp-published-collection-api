@@ -10,8 +10,7 @@ type PublishedCollection struct {
 }
 
 type PublishedItem struct {
-	StartTime string `json:"startTime"`
-	EndTime   string `json:"endTime"`
-	Uri       string `json:"uri"`
-	Size      int64  `json:"size"`
+	Duration int64  `json:"duration"`
+	Uri      string `json:"uri"`
+	Size     int64  `json:"size"`
 }
