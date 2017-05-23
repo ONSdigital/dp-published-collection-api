@@ -81,9 +81,9 @@ func (api *API) GetCollection(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to query results", http.StatusInternalServerError)
 		return
 	}
-	publishedCollection := PublishedCollection{CollectionName: collectionPath.String, PublishDate: convertTime(startTime.Int64),
-		PublishStartDate: convertTime(startTime.Int64), PublishEndDate: convertTime(completeTime.Int64),
-		Results: make([]PublishedItem, len(results))}
+	publishedCollection := PublishedCollection{CollectionName: collectionPath.String, CollectionID: collectionID,
+		PublishDate: convertTime(startTime.Int64), PublishStartDate: convertTime(startTime.Int64),
+		PublishEndDate: convertTime(completeTime.Int64), Results: make([]PublishedItem, len(results))}
 	copy(publishedCollection.Results, results)
 	data, _ := json.Marshal(publishedCollection)
 	w.Write(data)
