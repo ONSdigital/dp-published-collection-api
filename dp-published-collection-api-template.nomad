@@ -9,11 +9,6 @@ job "dp-published-collection-api" {
       artifact {
         source = "s3::S3_TAR_FILE"
         destination = "."
-        // The Following options are needed if no IAM roles are provided
-        // options {
-        // aws_access_key_id = ""
-        // aws_access_key_secret = ""
-        // }
       }
       env {
         PORT = "${NOMAD_PORT_http}"
@@ -30,7 +25,15 @@ job "dp-published-collection-api" {
           port "http" {}
         }
       }
-      
+      service {
+        port = "${NOMAD_PORT_http}"
+        check {
+          type = "http"
+          path = "/health"
+          interval = "10s"
+          timeout = "2s"
+        }
+      }
     }
   }
 }

@@ -97,6 +97,7 @@ func TestHealthIsOk(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		So(err, ShouldBeNil)
 		prepareMockStmts(mock)
+		mock.ExpectPrepare("SELECT 1").ExpectQuery().WillReturnRows(makeCollectionRow())
 		db.Begin()
 		defer db.Close()
 		api, err := NewAPI(db)
@@ -148,4 +149,5 @@ func prepareMockStmts(m sqlmock.Sqlmock) {
 	m.ExpectPrepare("SELECT schedule_id")
 	m.ExpectPrepare("SELECT schedule_id")
 	m.ExpectPrepare("SELECT uri")
+	m.ExpectPrepare("SELECT 1")
 }

@@ -14,6 +14,7 @@ type API struct {
 	CollectionStmt       *sql.Stmt
 	SingleCollectionStmt *sql.Stmt
 	CompleteFilesStmt    *sql.Stmt
+	HealthCheckStmt      *sql.Stmt
 	DB                   *sql.DB
 }
 
@@ -23,6 +24,7 @@ func NewAPI(db *sql.DB) (*API, error) {
 	singleCollectionSQL := `SELECT schedule_id, collection_path, start_time, complete_time
   from schedule WHERE complete_time IS NOT NULL AND collection_id = $1`
 	completeFilesSQL := "SELECT uri, complete_time FROM schedule_file WHERE schedule_id = $1"
+	healthCheckSQL := "SELECT 1"
 	collectionStmt, err := createStmt(collectionSQL, db)
 	if err != nil {
 		return nil, err
@@ -35,10 +37,15 @@ func NewAPI(db *sql.DB) (*API, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	healthCheckStmt, err := createStmt(healthCheckSQL, db)
+	if err != nil {
+		return nil, err
+	}
 	return &API{CollectionStmt: collectionStmt,
 		SingleCollectionStmt: singleCollectionStmt,
-		CompleteFilesStmt:    completeFilesStmt, DB: db}, err
+		CompleteFilesStmt:    completeFilesStmt,
+		HealthCheckStmt:      healthCheckStmt,
+		DB:                   db}, nil
 }
 
 func (api *API) GetList(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +97,7 @@ func (api *API) GetCollection(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) Health(w http.ResponseWriter, r *http.Request) {
-	err := api.DB.Ping()
+	_, err := api.HealthCheckStmt.Query()
 	if err != nil {
 		http.Error(w, "Unable to access database", http.StatusInternalServerError)
 	}
